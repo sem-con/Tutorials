@@ -55,7 +55,7 @@ But usually, you want to provide some additional configuration for the container
 IMAGE=semcon/sc-base:latest; docker run -d --name test -e IMAGE_SHA256="$(docker image ls --no-trunc -q $IMAGE | cut -c8-)" -e IMAGE_NAME=$IMAGE -p 4000:3000 $IMAGE /bin/init.sh "$(< init_json.trig)"
 ```  
 
-*Note:* make sure to run the command in a directory with `init_json.trig` available.
+*Note:* make sure to run the command in the directory with `init_json.trig` present, i.e., `Tutorials/1_Usage/`.
 
 After you have started the container you can also query the empty container:
 
