@@ -1,8 +1,10 @@
 # General Semantic Container Usage
 
+This tutorial introduces the general concept of interacting with Semantic Containers on the command-line. Refer to the [Tutorial-Overview](https://github.com/sem-con/Tutorials) for other aspects.
+
 ## Access an online Semantic Container  
 
-Get the result of all seismic events worldwide in the last 7 days:
+We start this tutorial by accessing a public Semantic Container run by ZAMG (Austrian Meteorology and Geophysics Institute) to get the result of all seismic events worldwide in the last 7 days:
 
 ```console
 $ curl -s "https://vownyourdata.zamg.ac.at:9500/api/data?duration=7"
@@ -33,7 +35,7 @@ The default API endpoint to retrieve data from a Semantic Container is `GET /api
 
 ## Running your own Semantic Container
 
-Before you can run your own Semantic Container you need to download the *base image* once from [Dockerhub](https://hub.docker.com/r/semcon/sc-base/) with the following command:  
+Before you can run your own Semantic Container you need to download the *base image* from [Dockerhub](https://hub.docker.com/r/semcon/sc-base/) with the following command:  
 
 ```console
 $ docker pull semcon/sc-base
