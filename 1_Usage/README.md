@@ -6,15 +6,15 @@ Get the result of all seismic events worldwide in the last 7 days:
 
 ```console
 $ curl -s "https://vownyourdata.zamg.ac.at:9500/api/data?duration=7"
-```
+```  
 
 Use `jq` to have the output nicely formatted:
 
 ```console
 $ curl -s "https://vownyourdata.zamg.ac.at:9500/api/data?duration=7" | jq
-```
+```  
 
-The default API endpoint to retrieve data from a Semantic Container is `GET /api/data` and the response is a JSON with the following structure:
+The default API endpoint to retrieve data from a Semantic Container is `GET /api/data` and the response is a JSON with the following structure:  
 
 ```
 {  
@@ -28,4 +28,59 @@ The default API endpoint to retrieve data from a Semantic Container is `GET /api
         "dlt-reference": "reference to distrituted ledger address where the hash value was stored"  
     }  
 }
+```  
+
+
+## Running your own Semantic Container
+
+Before you can run your own Semantic Container you need to download the *base image* once from [Dockerhub](https://hub.docker.com/r/semcon/sc-base/) with the following command:  
+
+```console
+$ docker pull semcon/sc-base
+```  
+
+The simplest way to start a Semantic Container is through the following command:
+
+```console
+$ docker run -p 3000:3000 -d semcon/sc-base
+```  
+
+*Note:* make sure to remove the container after usage with `docker rm -f {container name}`; get a list of all running containers with `docker ps`
+
+But usually, you want to provide some additional configuration for the container. In the next example we will provide information about the base image and configure the container with `init_json.trig`.
+
+```console
+IMAGE=semcon/sc-base:latest; docker run -d --name test -e IMAGE_SHA256="$(docker image ls --no-trunc -q $IMAGE | cut -c8-)" -e IMAGE_NAME=$IMAGE -p 4000:3000 $IMAGE /bin/init.sh "$(< init_json.trig)"
+```  
+
+*Note:* make sure to run the command in a directory with `init_json.trig` available.
+
+After you have started the container you can also query the empty container:
+
+```console
+$ curl -s http://localhost:4000/api/data | jq
 ```
+
+## Writing data into a Semantic Container
+
+This sections assumes you have started the base image (`semcon/sc-base`) locally on port 4000.
+
+Use the following statement to send data into a Semantic Container:
+
+```console
+curl -H "Content-Type: application/json" -d '[{"hello":"world"}]' -X POST http://localhost:4000/api/data
+```
+
+Check if the write operation was successfull:  
+
+```console
+$ curl http://localhost:4000/api/data/plain
+```
+
+You can also create Semantic Container pipelines by reading data from Semantic Container and "piping" the result into another container:
+
+```console
+curl -s "https://vownyourdata.zamg.ac.at:9500/api/data?duration=7" | curl -H "Content-Type: application/json" -d "$( cat - )" -X POST http://localhost:4000/api/data
+```  
+
+The command above reads all seismic events from the last 7 days (query parameter `duration=7`) and writes the result into a local container on port 4000.
