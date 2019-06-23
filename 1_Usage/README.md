@@ -86,3 +86,21 @@ curl -s "https://vownyourdata.zamg.ac.at:9500/api/data?duration=7" | curl -H "Co
 ```  
 
 The command above reads all seismic events from the last 7 days (query parameter `duration=7`) and writes the result into a local container on port 4000.
+
+## Display Usage Policy Information for a Semantic Container
+
+The following command displays the usage policy for a given Semantic Container:
+
+```console
+curl https://vownyourdata.zamg.ac.at:9500/api/meta/usage
+```
+
+
+## Display Provenance Information for a dataset in a Semantic Container
+
+The following command creates a nicely formatted output of the provenance information. Note that it requires `ruby` to be installed!
+
+```console
+curl -s "https://vownyourdata.zamg.ac.at:9702/api/data?file=20190424" | \ 
+      jq '.provision.provenance' | ruby -e "puts $(</dev/stdin)"
+```

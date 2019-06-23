@@ -5,9 +5,11 @@ This repository describes step-by-step instructions to demonstrate the various f
 1. [General Semantic Container Usage](1_Usage/README.md)  
     *Topics:* Accessing online container - Running your own container - Writing data
 
-2. Developing Semantic Container
+2. [Developing Semantic Containers](2_Development/REAMDE.md)    
+    *Topics:* Cloning Template - Extending functionality - Testing and deploying container
 
-3. Accessing Semantic Containers in Jupyter Notebooks
+3. [Accessing Semantic Containers in Jupyter Notebooks](3_Jupyter/README.md)    
+    *Topics:* Example Jupyter notebook
 
 ## Prerequisites  
 
