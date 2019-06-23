@@ -16,7 +16,10 @@ Use the following checklist to make the necessary changes:
 1. specify repository and container name in `build.sh`    
 2. add any necessary software components in the `Dockerfile`    
     you might also want to add gems in the `Gemfile` - use as starting point the [version from the base container](https://github.com/sem-con/sc-base/blob/master/Gemfile)    
-3. implement a custom method for responding to `GET /api/data` by editing `app/helpers/data_access_helper.rb`        
+3. implement a custom method for responding to `GET /api/data` by editing `app/helpers/data_access_helper.rb`    
+4. if you want to provide additional API endpoints edit `config/routes.rb` and implement the controller in `app/controllers/api/v1`    
+5. to provide custom container initialization edit the `script` directory    
+6. by convention it is sensible to provide a default `init.trig` and commands for running the container in `test`        
 
 ## Build and Test the new Semantic Container
 
