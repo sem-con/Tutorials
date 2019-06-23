@@ -2,4 +2,28 @@
 
 This tutorial describes the basic steps to develop a specific Semantic Container by extending the [semantic base container](https://github.com/sem-con/sc-base). Refer to the [Tutorial-Overview](https://github.com/sem-con/Tutorials) for other aspects.
 
-## Clone Semantic Container Template  
+## Clone Semantic Container Template    
+For most use cases the following template provides a scaffold to create a specialized Semantic Container: https://github.com/sem-con/template
+
+```console
+git clone https://github.com/sem-con/template.git
+```
+
+## Adapt the Template
+
+Use the following checklist to make the necessary changes:
+
+1. specify repository and container name in `build.sh`    
+2. add any necessary software components in the `Dockerfile`    
+    you might also want to add gems in the `Gemfile` - use as starting point the [version from the base container](https://github.com/sem-con/sc-base/blob/master/Gemfile)    
+3. implement a custom method for responding to `GET /api/data` by editing `app/helpers/data_access_helper.rb`        
+
+## Build and Test the new Semantic Container
+
+After you have implemented the new functionality the Semantic Container can be built with the following command in the root directory:    
+
+```console
+./build.sh
+```
+
+This downloads the current base container and applies the provided changes to create derived Semantic Container. Start the container with `docker run -p 3000:3000 repo/sc-name` and start testing.
