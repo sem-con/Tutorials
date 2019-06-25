@@ -20,4 +20,4 @@ These Jupyter Notebook examples demonstrate different use case on how to work wi
 * **Working wiht Provenance information:** [provenance_visualization.ipynb](provenance_visualization.ipynb)    
 
 
-*Credit:* Thanks a lot to user [Peb](https://github.com/pebbie) for creating Jupyter Notebooks!
+*Credit:* Thanks a lot to user [Peb](https://github.com/pebbie) for creating the Jupyter Notebooks!
