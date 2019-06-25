@@ -30,3 +30,10 @@ After you have implemented the new functionality the Semantic Container can be b
 ```
 
 This downloads the current base container and applies the provided changes to create derived Semantic Container. Start the container with `docker run -p 3000:3000 repo/sc-name` and start testing.
+
+## Examples    
+
+Here are some links to examples for extending the base container:    
+* [sc-seismic](https://github.com/sem-con/sc-seismic): annotates a open data source and makes it avaialable as Semantic Container    
+* [sc-sparql](https://github.com/sem-con/sc-sparql): integrate another service and extend the Semantic Container with additional API endpoints    
+* [sc-sentinel](https://github.com/sem-con/sc-sentinel): demonstrates asynchronous processing and process pipelines    
