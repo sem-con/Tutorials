@@ -11,6 +11,9 @@ This repository describes step-by-step instructions to demonstrate the various f
 3. [Accessing Semantic Containers in Jupyter Notebook](3_Jupyter/README.md)    
     *Topics:* Example Jupyter notebook
 
+4. [Semantic Container with SPARQL Endpoint](4_SPARQL/README.md)    
+    *Topics:* Configuring and running a container with SPARQL endpoint - Working with RDF data
+
 ## Prerequisites  
 
 Download all files from the tutorial to your local computer so that you have relevant files available:  

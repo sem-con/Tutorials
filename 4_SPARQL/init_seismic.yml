@@ -1,0 +1,144 @@
+---
+General:
+  title: Seismic Data
+  description: |
+    seismic data provided via a SPARQL endpoint
+    in a Semantic Container
+  creator:
+    type: person
+    name: Christoph
+    email: christoph@ownyourdata.eu
+  contributors:
+    - type: person
+      name: Fajar
+      email: fajar@juang.id
+    - type: organization
+      name: OwnYourData
+      email: office@ownyourdata.eu
+  tags:
+    - seismic
+  syntax: JSON
+UsagePolicy: 
+  - Data-Category: any-data
+  - Purpose: no-restriction
+  - Processing:
+      - Aggregate
+  - Recipient:
+      - Ours
+      - Others-with-same-Policy
+  - Storage:
+      - Location:
+          - Our-Servers
+      - Duration: Stated-Purpose
+DataModel: |
+    #################################################################
+    #    Data properties
+    #################################################################
+
+    ###  http://w3id.org/semcon/ns/seismic#lastUpdate
+    scs:lastUpdate rdf:type owl:DatatypeProperty ;
+                rdfs:range xsd:dateTime .
+
+
+    ###  http://w3id.org/semcon/ns/seismic#magnitude
+    scs:magnitude rdf:type owl:DatatypeProperty ;
+               rdfs:range xsd:float .
+
+
+    ###  http://w3id.org/semcon/ns/seismic#magnitudeType
+    scs:magnitudeType rdf:type owl:DatatypeProperty ;
+                   rdfs:range xsd:string .
+
+
+    ###  http://w3id.org/semcon/ns/seismic#auth
+    scs:auth rdf:type owl:DatatypeProperty ;
+              rdfs:range xsd:string .
+
+    ###  http://w3id.org/semcon/ns/seismic#sourceId
+    scs:sourceId rdf:type owl:DatatypeProperty ;
+              rdfs:range xsd:string .
+
+
+    ###  http://w3id.org/semcon/ns/seismic#time
+    scs:time rdf:type owl:DatatypeProperty ;
+          rdfs:range xsd:dateTime .
+
+
+    ###  http://www.w3.org/2003/01/geo/wgs84_pos#alt
+    wgs:alt rdf:type owl:DatatypeProperty .
+
+
+    ###  http://www.w3.org/2003/01/geo/wgs84_pos#asWKT
+    geo:asWKT rdf:type owl:DatatypeProperty .
+
+
+    #################################################################
+    #    Classes
+    #################################################################
+
+    ###  http://w3id.org/semcon/ns/seismic#SeismicActivity
+    scs:SeismicActivity rdf:type owl:Class .
+
+DataMapping: |
+    <#SeismicMapping>
+        rml:logicalSource [
+            rml:source [
+                a carml:Stream;
+            ];
+            rml:referenceFormulation ql:JSONPath;
+            rml:iterator "$.provision.content.[*]" ;
+        ];
+
+        rr:subjectMap [
+            rr:template "http://w3id.org/semcon/seismic/{sourceId}" ;
+        ];
+
+        rr:predicateObjectMap [
+            rr:predicate rdf:type;
+            rr:objectMap [ rr:template "http://w3id.org/semcon/ns/seismic#SeismicActivity" ];
+        ];
+
+        rr:predicateObjectMap [
+            rr:predicate scs:lastUpdate;
+            rr:objectMap [ rml:reference "lastUpdate" ; ];
+            rr:datatype xsd:dateTime ;
+        ];
+
+        rr:predicateObjectMap [
+            rr:predicate scs:magnitude;
+            rr:objectMap [ rml:reference "magnitude" ; ];
+            rr:datatype xsd:dateTime ;
+        ];
+
+        rr:predicateObjectMap [
+            rr:predicate scs:magnitudeType;
+            rr:objectMap [ rml:reference "magnitudeType" ; ];
+            rr:datatype xsd:dateTime ;
+        ];
+
+        rr:predicateObjectMap [
+            rr:predicate scs:auth;
+            rr:objectMap [ rml:reference "auth" ; ];
+            rr:datatype xsd:string ;
+        ];
+
+        rr:predicateObjectMap [
+            rr:predicate scs:sourceId;
+            rr:objectMap [ rml:reference "sourceId" ; ];
+            rr:datatype xsd:string ;
+        ];
+
+        rr:predicateObjectMap [
+            rr:predicate wgs:alt ;
+            rr:objectMap [ rml:reference "alt" ; ];
+            rr:datatype xsd:float ;
+        ];
+
+        rr:predicateObjectMap [
+            rr:predicate geo:asWKT ;
+            rr:objectMap [
+                carml:multiTemplate "Point(({lat}, {long}))" ;
+                rr:datatype geo:wktLiteral ;
+            ];
+        ];
+    .
