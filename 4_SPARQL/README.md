@@ -89,4 +89,11 @@ Use the following command to store data in the container:
 curl -H "Content-Type: application/json" -d "$(< seismic.json)" -X POST http://localhost:4000/api/data
 ```
 
+## Working with RDF data  
+
+Use the following command to query a triple:   
+
+```console
+curl http://localhost:4000/rdf/sparql?query=SELECT%20*%20WHERE%20{%20?a%20?b%20?c}%20LIMIT%2010 
+```
 
