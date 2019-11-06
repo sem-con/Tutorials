@@ -4,15 +4,25 @@ This tutorial introduces the `sc-sparql` Semantic Containers image. Refer to the
 
 ## Start a SPARQL Semantic Container  
 
-Download the *SPARQL base image* from [Dockerhub](https://hub.docker.com/r/semcon/sc-sparql/) with the following command:  
+Download the *Semantic Container SPARQL base image* from [Dockerhub](https://hub.docker.com/r/semcon/sc-sparql/) with the following command:  
 
 ```console
 $ docker pull semcon/sc-sparql
 ```  
 
-To start a SPARQL container the configuration requires [RML](http://rml.io/spec.html) for mapping the available data to RDF. In the example seismic data in `seismic.json` is mapped with the following RML:
+To start a SPARQL container the configuration requires [RML](http://rml.io/spec.html) for mapping the available data to RDF. In the following example the seismic data in [`seismic.json`](seismic.json) is mapped with the following RML:
 
 ```
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix scs:   <http://w3id.org/semcon/ns/seismic#> .
+@prefix geo:   <http://www.opengis.net/ont/geosparql#> .
+@prefix wgs:   <http://www.w3.org/2003/01/geo/wgs84_pos#> .
+@prefix rr:    <http://www.w3.org/ns/r2rml#> .
+@prefix rml:   <http://semweb.mmlab.be/ns/rml#> .
+@prefix ql:    <http://semweb.mmlab.be/ns/ql#> .
+@prefix carml: <http://carml.taxonic.com/carml/> .
+
 <#SeismicMapping>
     rml:logicalSource [
         rml:source [
@@ -77,10 +87,12 @@ To start a SPARQL container the configuration requires [RML](http://rml.io/spec.
 .
 ```  
 
-The RML is to be provided in the `DataMapping` attributes of the container configuration. A complete `init_seismic.yml` is available in this repository and a container can be started with the following command:  
+*Hint: use the [online Turtle validator http://ttl.summerofcode.be/](http://ttl.summerofcode.be/) to check the validity of your mapping*    
+
+The RML is to be provided in the `DataMapping` attributes of the container configuration. A complete configuration [`init_seismic.trig`](init_seismic.trig) is available in this repository and a container can be started with the following command:  
 
 ```console
-IMAGE=semcon/sc-sparql:latest; docker run -d --name seismic_sparql -e IMAGE_SHA256="$(docker image ls --no-trunc -q $IMAGE | cut -c8-)" -e IMAGE_NAME=$IMAGE -p 4000:3000 $IMAGE /bin/init.sh "$(< init_seismic.yml)"
+IMAGE=semcon/sc-sparql:latest; docker run -d --name seismic_sparql -e IMAGE_SHA256="$(docker image ls --no-trunc -q $IMAGE | cut -c8-)" -e IMAGE_NAME=$IMAGE -p 4000:3000 $IMAGE /bin/init.sh "$(< init_seismic.trig)"
 ```  
 
 Use the following command to store data in the container:  
@@ -97,3 +109,4 @@ Use the following command to query a triple:
 curl http://localhost:4000/rdf/sparql?query=SELECT%20*%20WHERE%20{%20?a%20?b%20?c}%20LIMIT%2010 
 ```
 
+*Hint: the tool [yasgui.org](http://yasgui.org) can be used as a webfrontend to perform SPARQL queries*

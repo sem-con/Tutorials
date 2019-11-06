@@ -30,56 +30,17 @@ UsagePolicy:
       - Location:
           - Our-Servers
       - Duration: Stated-Purpose
-DataModel: |
-    #################################################################
-    #    Data properties
-    #################################################################
-
-    ###  http://w3id.org/semcon/ns/seismic#lastUpdate
-    scs:lastUpdate rdf:type owl:DatatypeProperty ;
-                rdfs:range xsd:dateTime .
-
-
-    ###  http://w3id.org/semcon/ns/seismic#magnitude
-    scs:magnitude rdf:type owl:DatatypeProperty ;
-               rdfs:range xsd:float .
-
-
-    ###  http://w3id.org/semcon/ns/seismic#magnitudeType
-    scs:magnitudeType rdf:type owl:DatatypeProperty ;
-                   rdfs:range xsd:string .
-
-
-    ###  http://w3id.org/semcon/ns/seismic#auth
-    scs:auth rdf:type owl:DatatypeProperty ;
-              rdfs:range xsd:string .
-
-    ###  http://w3id.org/semcon/ns/seismic#sourceId
-    scs:sourceId rdf:type owl:DatatypeProperty ;
-              rdfs:range xsd:string .
-
-
-    ###  http://w3id.org/semcon/ns/seismic#time
-    scs:time rdf:type owl:DatatypeProperty ;
-          rdfs:range xsd:dateTime .
-
-
-    ###  http://www.w3.org/2003/01/geo/wgs84_pos#alt
-    wgs:alt rdf:type owl:DatatypeProperty .
-
-
-    ###  http://www.w3.org/2003/01/geo/wgs84_pos#asWKT
-    geo:asWKT rdf:type owl:DatatypeProperty .
-
-
-    #################################################################
-    #    Classes
-    #################################################################
-
-    ###  http://w3id.org/semcon/ns/seismic#SeismicActivity
-    scs:SeismicActivity rdf:type owl:Class .
-
 DataMapping: |
+    @prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+    @prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+    @prefix scs:   <http://w3id.org/semcon/ns/seismic#> .
+    @prefix geo:   <http://www.opengis.net/ont/geosparql#> .
+    @prefix wgs:   <http://www.w3.org/2003/01/geo/wgs84_pos#> .
+    @prefix rr:    <http://www.w3.org/ns/r2rml#> .
+    @prefix rml:   <http://semweb.mmlab.be/ns/rml#> .
+    @prefix ql:    <http://semweb.mmlab.be/ns/ql#> .
+    @prefix carml: <http://carml.taxonic.com/carml/> .
+
     <#SeismicMapping>
         rml:logicalSource [
             rml:source [
