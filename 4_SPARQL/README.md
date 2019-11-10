@@ -13,7 +13,7 @@ $ docker pull semcon/sc-sparql
 To start a SPARQL container the configuration requires [RML](http://rml.io/spec.html) for mapping the available data to RDF. In the following example the seismic data in [`seismic.json`](seismic.json) is mapped with the following RML:
 
 ```
-    @prefix scs: <http://w3id.org/semcon/ns/seismic#> .
+    @prefix scs:    <http://w3id.org/semcon/ns/seismic#> .
     @prefix rr:     <http://www.w3.org/ns/r2rml#> .
     @prefix rml:    <http://semweb.mmlab.be/ns/rml#> .
     @prefix ql:     <http://semweb.mmlab.be/ns/ql#> .
@@ -155,7 +155,9 @@ Or use the SPARQL endpoint on port 4040:
 curl http://localhost:4040/rdf/sparql?query=SELECT%20*%20WHERE%20%7B%20?a%20?b%20?c%7D%20LIMIT%2010
 ```
 
-*Hint: the tool [yasgui.org](http://yasgui.org) can be used as a webfrontend to perform SPARQL queries*
+*Hint: the tool [yasgui.org](http://yasgui.org) can be used as a webfrontend to perform SPARQL queries*    
+
+### Time-based SPARQL Query    
 
 An example for a more complex SPARQL query is the following time based `FILTER` statement:    
 
@@ -178,6 +180,8 @@ Use URL encoding (or *percent-encoding*) to pass this query as parameter:
 ```console
 curl http://localhost:4040/rdf/sparql?query=prefix%20scs%3A%20%3Chttp%3A%2F%2Fw3id.org%2Fsemcon%2Fns%2Fseismic%23%3E%0Aprefix%20rdf%3A%20%3Chttp%3A%2F%2Fwww.w3.org%2F1999%2F02%2F22-rdf-syntax-ns%23%3E%0Aprefix%20xsd%3A%20%3Chttp%3A%2F%2Fwww.w3.org%2F2001%2FXMLSchema%23%3E%0A%0ASELECT%20%3Fpoint%20%3FlastUpdate%0AWHERE%20%7B%20%20%20%20%20%20%20%20%20%20%20%20%0A%09%3Fpoint%20rdf%3Atype%20scs%3ASeismicActivity%20.%0A%09%3Fpoint%20scs%3AlastUpdate%20%3FlastUpdate%20.%0A%20%20%20%09FILTER%20%28%3FlastUpdate%20%3E%20%222019-10-28T00%3A00%3A00%22%5E%5Exsd%3AdateTime%20%26%26%20%3FlastUpdate%20%3C%20%222019-10-28T11%3A59%3A59%22%5E%5Exsd%3AdateTime%29%0A%7D%0AORDER%20BY%20%3FlastUpdate%0A
 ```
+
+*Hint: the tool [URL Decoder/Encoder](https://meyerweb.com/eric/tools/dencoder/) produces compliant percent-encoded strings*    
 
 ## Improve the SPARQL Tutorial    
 
