@@ -26,6 +26,11 @@
 @prefix ql:     <http://semweb.mmlab.be/ns/ql#> .
 @prefix carml:  <http://carml.taxonic.com/carml/> .
 @prefix dcterm: <http://purl.org/dc/terms/> .
+@prefix func:   <http://semantics.id/ns/function#> .
+@prefix param:  <http://semantics.id/ns/parameter#> .
+@prefix fnml:   <http://semweb.mmlab.be/ns/fnml#> .
+@prefix fno:    <http://semweb.datasciencelab.be/ns/function#> .
+
 
 #################################################################
 #    NAMED GRAPH ==> :BaseConfigurations
@@ -140,32 +145,38 @@
 
         rr:predicateObjectMap [
             rr:predicate scs:lastUpdate;
-            rr:objectMap [ rml:reference "lastUpdate" ; ];
-            rr:datatype xsd:dateTime ;
+            rr:objectMap <#getTime> ;
         ];
 
         rr:predicateObjectMap [
             rr:predicate scs:magnitude;
-            rr:objectMap [ rml:reference "magnitude" ; ];
-            rr:datatype xsd:dateTime ;
+            rr:objectMap [
+                rml:reference "magnitude" ;
+                rr:datatype xsd:float ;
+            ];
         ];
 
         rr:predicateObjectMap [
             rr:predicate scs:magnitudeType;
-            rr:objectMap [ rml:reference "magnitudeType" ; ];
-            rr:datatype xsd:dateTime ;
+            rr:objectMap [
+                rml:reference "magnitudeType" ;
+            ];
         ];
 
         rr:predicateObjectMap [
             rr:predicate scs:auth;
-            rr:objectMap [ rml:reference "auth" ; ];
-            rr:datatype xsd:string ;
+            rr:objectMap [
+                rml:reference "auth" ;
+                rr:datatype xsd:string ;
+            ];
         ];
 
         rr:predicateObjectMap [
             rr:predicate scs:sourceId;
-            rr:objectMap [ rml:reference "sourceId" ; ];
-            rr:datatype xsd:string ;
+            rr:objectMap [
+                rml:reference "sourceId" ;
+                rr:datatype xsd:string ;
+            ];
         ];
 
         rr:predicateObjectMap [
@@ -174,11 +185,52 @@
             rr:datatype xsd:float ;
         ];
 
+    #    rr:predicateObjectMap [
+    #        rr:predicate wgs:lat ;
+    #        rr:objectMap [ rml:reference "lat" ; ];
+    #        rr:datatype xsd:float ;
+    #    ];
+    #
+    #    rr:predicateObjectMap [
+    #        rr:predicate wgs:long ;
+    #        rr:objectMap [ rml:reference "long" ; ];
+    #        rr:datatype xsd:float ;
+    #    ];
+
         rr:predicateObjectMap [
             rr:predicate geo:asWKT ;
             rr:objectMap [
-                carml:multiTemplate "Point(({lat}, {long}))" ;
+                carml:multiTemplate "Point({lat} {long})" ;
                 rr:datatype geo:wktLiteral ;
+            ];
+        ];
+    .
+
+
+    <#getTime>
+        rr:termType rr:Literal ;
+        rr:datatype xsd:dateTime;
+        fnml:functionValue [
+            rr:subjectMap [
+                rr:template "http://w3id.org/semcon/seismic/{lastUpdate}";
+            ];
+            rr:predicateObjectMap [
+                rr:predicate fno:executes ;
+                rr:object func:timeConversion ;
+            ];
+            rr:predicateObjectMap [
+                rr:predicate param:time ;
+                rr:objectMap [
+                    rml:reference "lastUpdate" ;
+                    rr:datatype xsd:string ;
+                ];
+            ];
+            rr:predicateObjectMap [
+                rr:predicate param:timeFormat ;
+                rr:objectMap [
+                    rr:template "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'" ;
+                    rr:datatype xsd:string ;
+                ];
             ];
         ];
     .
