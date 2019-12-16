@@ -113,7 +113,9 @@ There are two options to make data publicly available:
 * containers can also be stopped and distributed through images stored in a Docker image repositories (e.g., https://www.dockerhub.com); for data access it is necessary to start the image    
     example commands to stop, publish and run a container / image:    
     ```console
-    docker commit my_conainer repo/my_image
-    docker push repo/my_image
-    docker run -d -p 4000:3000 repo/my_image
+    docker commit my_conainer repo/my_image          # write container to image
+    docker push repo/my_image                        # push image to repository
+    docker save repo/my_image | gzip > my_image.tgz  # write image to file
+    docker load < my_image.tgz                       # read image from file
+    docker run -p 3000:4000 repo/my_image            # re-start container
     ```
