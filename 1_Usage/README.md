@@ -7,13 +7,13 @@ This tutorial introduces the general concept of interacting with Semantic Contai
 We start this tutorial by accessing a public Semantic Container run by ZAMG (Austrian Meteorology and Geophysics Institute) to get the result of all seismic events worldwide in the last 7 days:
 
 ```console
-$ curl -s "https://vownyourdata.zamg.ac.at:9500/api/data?duration=7"
+curl -s "https://vownyourdata.zamg.ac.at:9500/api/data?duration=7"
 ```  
 
 Use `jq` to have the output nicely formatted:
 
 ```console
-$ curl -s "https://vownyourdata.zamg.ac.at:9500/api/data?duration=7" | jq
+curl -s "https://vownyourdata.zamg.ac.at:9500/api/data?duration=7" | jq
 ```  
 
 The default API endpoint to retrieve data from a Semantic Container is `GET /api/data` and the response is a JSON with the following structure:  
@@ -38,13 +38,13 @@ The default API endpoint to retrieve data from a Semantic Container is `GET /api
 Before you can run your own Semantic Container you need to download the *base image* from [Dockerhub](https://hub.docker.com/r/semcon/sc-base/) with the following command:  
 
 ```console
-$ docker pull semcon/sc-base
+docker pull semcon/sc-base
 ```  
 
 The simplest way to start a Semantic Container is through the following command:
 
 ```console
-$ docker run -p 3000:3000 -d semcon/sc-base
+docker run -p 3000:3000 -d semcon/sc-base
 ```  
 
 *Note:* make sure to remove the container after usage with `docker rm -f {container name}`; get a list of all running containers with `docker ps`
@@ -60,7 +60,7 @@ IMAGE=semcon/sc-base:latest; docker run -d --name test -e IMAGE_SHA256="$(docker
 After you have started the container you can also query the empty container:
 
 ```console
-$ curl -s http://localhost:4000/api/data | jq
+curl -s http://localhost:4000/api/data | jq
 ```
 
 ## Writing data into a Semantic Container
@@ -76,7 +76,7 @@ curl -H "Content-Type: application/json" -d '[{"hello":"world"}]' -X POST http:/
 Check if the write operation was successfull:  
 
 ```console
-$ curl http://localhost:4000/api/data/plain
+curl http://localhost:4000/api/data/plain
 ```
 
 You can also create Semantic Container pipelines by reading data from Semantic Container and "piping" the result into another container:
@@ -104,3 +104,16 @@ The following command creates a nicely formatted output of the provenance inform
 curl -s "https://vownyourdata.zamg.ac.at:9702/api/data?file=20190424" | \ 
       jq '.provision.provenance' | ruby -e "puts $(</dev/stdin)"
 ```
+
+## Commit a Container    
+
+There are two options to make data publicly available:    
+
+* running containers can be accessed through the API as described above    
+* containers can also be stopped and distributed through images stored in a Docker image repositories (e.g., https://www.dockerhub.com); for data access it is necessary to start the image    
+    example commands to stop, publish and run a container / image:    
+    ```console
+    docker commit my_conainer repo/my_image
+    docker push repo/my_image
+    docker run -d -p 4000:3000 repo/my_image
+    ```
