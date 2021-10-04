@@ -1,0 +1,22 @@
+version: "3"
+services:
+  semcon:
+    image: semcon/sc-base:latest
+    deploy:
+      resources:
+        limits:
+          memory: 256m
+    container_name: local_semcon
+    restart: unless-stopped
+    networks:
+      - local-net
+    environment:
+      SEMCON_DB: "external"
+  db:
+    image: postgres:12.1
+    volumes:
+      - ./postgres/data:/var/lib/postgresql/data
+    networks:
+      - local-net
+networks:
+  local-net:

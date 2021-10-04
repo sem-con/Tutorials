@@ -1,0 +1,57 @@
+version: "3"
+services:
+  semcon:
+    image: semcon/sc-base:latest
+    deploy:
+      resources:
+        limits:
+          memory: 256m
+    container_name: local_semcon
+    restart: unless-stopped
+    networks:
+      - local-net
+    environment:
+      SEMCON_DB: "external"
+      AUTH: "true"
+      VIRTUAL_HOST: "semcon.data-container.net"
+      VIRTUAL_PORT: "3000"
+      LETSENCRYPT_HOST: "semcon.data-container.net"
+  db:
+    image: postgres:12.1
+    volumes:
+      - ./postgres/data:/var/lib/postgresql/data
+    networks:
+      - local-net
+  frontproxy:
+    image: jwilder/nginx-proxy:alpine
+    container_name: reverse-proxy
+    restart: always
+    networks:
+      - local-net
+    environment:
+      DEFAULT_HOST: default.vhost
+    ports:
+      - "8093:443"
+    volumes:
+      - certs:/etc/nginx/certs
+      - vhost-d:/etc/nginx/vhost.d
+      - html:/usr/share/nginx/html
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+  nginx-lesencrypt-companion:
+    image: jrcs/letsencrypt-nginx-proxy-companion
+    container_name: letsencrypt-companion
+    restart: always
+    volumes:
+      - certs:/etc/nginx/certs
+      - vhost-d:/etc/nginx/vhost.d
+      - html:/usr/share/nginx/html
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    environment:
+      DEFAULT_EMAIL: support@ownyourdata.eu
+      NGINX_PROXY_CONTAINER: reverse-proxy
+volumes:
+  certs:
+  vhost-d:
+  html:
+networks:
+  local-net:

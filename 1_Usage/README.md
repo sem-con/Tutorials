@@ -1,5 +1,7 @@
 # General Semantic Container Usage
 
+*latest update: 4 October 2021*
+
 This tutorial introduces the general concept of interacting with Semantic Containers on the command-line. Refer to the [Tutorial-Overview](https://github.com/sem-con/Tutorials) for other aspects.
 
 ## Access an online Semantic Container  
@@ -7,13 +9,16 @@ This tutorial introduces the general concept of interacting with Semantic Contai
 We start this tutorial by accessing a public Semantic Container run by ZAMG (Austrian Meteorology and Geophysics Institute) to get the result of all seismic events worldwide in the last 7 days:
 
 ```console
-curl -s "https://vownyourdata.zamg.ac.at:9500/api/data?duration=7"
+curl "https://vownyourdata.zamg.ac.at:9500/api/data?duration=7"
 ```  
+
+**Note:** some users reported problems with curl and the used SSL certificate; the following link should work fine in your browser: https://vownyourdata.zamg.ac.at:9500/api/data?duration=7    
+With `curl -k` you can ignore SSL problems in curl
 
 Use `jq` to have the output nicely formatted:
 
 ```console
-curl -s "https://vownyourdata.zamg.ac.at:9500/api/data?duration=7" | jq
+curl -s -k "https://vownyourdata.zamg.ac.at:9500/api/data?duration=7" | jq
 ```  
 
 The default API endpoint to retrieve data from a Semantic Container is `GET /api/data` and the response is a JSON with the following structure:  
@@ -38,61 +43,63 @@ The default API endpoint to retrieve data from a Semantic Container is `GET /api
 Before you can run your own Semantic Container you need to download the *base image* from [Dockerhub](https://hub.docker.com/r/semcon/sc-base/) with the following command:  
 
 ```console
-docker pull semcon/sc-base
+docker pull semcon/sc-base:2021_05
 ```  
+
+**Note:** we recommend to run a stable version (currently `semcon/sc-base:2021_05`); if you are adventorous you can also try current developer builds by using `semcon/sc-base:latest`    
 
 The simplest way to start a Semantic Container is through the following command:
 
 ```console
-docker run -p 3000:3000 -d semcon/sc-base
+docker run -p 3000:3000 -d semcon/sc-base:2021_05
 ```  
 
-*Note:* make sure to remove the container after usage with `docker rm -f {container name}`; get a list of all running containers with `docker ps`
+**Note:** make sure to remove the container after usage with `docker rm -f {container name}`; get a list of all running containers with `docker ps`
 
-But usually, you want to provide some additional configuration for the container. In the next example we will provide information about the base image and configure the container with `init_json.trig`.
+Sometimes, you want to provide some additional configuration for the container. In the next example we will provide information about the base image and configure the container with `init_csv.trig`.
 
 ```console
-IMAGE=semcon/sc-base:latest; docker run -d --name test -e IMAGE_SHA256="$(docker image ls --no-trunc -q $IMAGE | cut -c8-)" -e IMAGE_NAME=$IMAGE -p 4000:3000 $IMAGE /bin/init.sh "$(< init_json.trig)"
+IMAGE=semcon/sc-base:latest; docker run -d --name test -e IMAGE_SHA256="$(docker image ls --no-trunc -q $IMAGE | cut -c8-)" -e IMAGE_NAME=$IMAGE -p 4000:3000 $IMAGE /bin/init.sh "$(< init_csv.trig)"
 ```  
 
-*Note:* make sure to run the command in the directory with `init_json.trig` present, i.e., `Tutorials/1_Usage/`.
+**Note:** make sure to run the command in the directory with `init_csv.trig` present, i.e., `Tutorials/1_Usage/`.
 
-After you have started the container you can also query the empty container:
+After you have started the container you can show the current status:
 
 ```console
-curl -s http://localhost:4000/api/data | jq
+curl -s http://localhost:4000/api/active
 ```
 
 ## Writing data into a Semantic Container
 
-This sections assumes you have started the base image (`semcon/sc-base`) locally on port 4000.
+This sections assumes you have started the base image (`semcon/sc-base:2021_05`) locally on port 3000 and did not specify additional configuration options.
 
 Use the following statement to send data into a Semantic Container:
 
 ```console
-curl -H "Content-Type: application/json" -d '[{"hello":"world"}]' -X POST http://localhost:4000/api/data
+curl -H "Content-Type: application/json" -d '[{"hello":"world"}]' -X POST http://localhost:3000/api/data
 ```
 
 Check if the write operation was successfull:  
 
 ```console
-curl http://localhost:4000/api/data/plain
+curl "http://localhost:3000/api/data&f=plain"
 ```
 
 You can also create Semantic Container pipelines by reading data from Semantic Container and "piping" the result into another container:
 
 ```console
-curl -s "https://vownyourdata.zamg.ac.at:9500/api/data?duration=7" | curl -H "Content-Type: application/json" -d "$( cat - )" -X POST http://localhost:4000/api/data
+curl -s -k "https://vownyourdata.zamg.ac.at:9500/api/data?duration=7" | curl -H "Content-Type: application/json" -d @- -X POST http://localhost:3000/api/data
 ```  
 
-The command above reads all seismic events from the last 7 days (query parameter `duration=7`) and writes the result into a local container on port 4000.
+The command above reads all seismic events from the last 7 days (query parameter `duration=7`) and writes the result into a local container on port 3000.
 
 ## Display Usage Policy Information for a Semantic Container
 
 The following command displays the usage policy for a given Semantic Container:
 
 ```console
-curl https://vownyourdata.zamg.ac.at:9500/api/meta/usage
+curl -k https://vownyourdata.zamg.ac.at:9500/api/meta/usage
 ```
 
 
@@ -101,7 +108,7 @@ curl https://vownyourdata.zamg.ac.at:9500/api/meta/usage
 The following command creates a nicely formatted output of the provenance information. Note that it requires `ruby` to be installed!
 
 ```console
-curl -s "https://vownyourdata.zamg.ac.at:9702/api/data?file=20190424" | \ 
+curl -s -k "https://vownyourdata.zamg.ac.at:9500/api/data" | \
       jq '.provision.provenance' | ruby -e "puts $(</dev/stdin)"
 ```
 
